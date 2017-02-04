@@ -2,12 +2,14 @@
 
 # NOTE: this script requires "DOMAIN" to be set and requires composer.
 # Composer usually requires git/hg/svn/etc and of course php.
+# It is fairly specific to CLOUD SITES, but wouldn't be hard to customize.
 # It is designed to be run as part of a Jenkins job.
 
 # REQUIRED ENVIRONMENT VARIABLES
 # - DOMAIN = thedomain.com - used to determine the deployment path
 # - HTACCESS_FILE = /path/to/htaccess - deployed as .htaccess (use config file in jenkins)
 # - ENV_FILE = /path/to/secret/env - deployed as .env (used for secrets)
+# - CREDS = user:passwd - sftp server credentials (password can be "dummy" if keys are used)
 
 # DETERMINE DEPLOYMENT PATH (top level domains have www. prefixed in Cloud Sites)
 DOTS=$(_TMPDOTS=${DOMAIN//[^.]}; echo ${#_TMPDOTS})
