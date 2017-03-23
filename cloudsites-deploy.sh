@@ -26,9 +26,9 @@ fi
 if [ -f "composer.json" ]; then
   echo "Running Composer..."
   if [ -d "vendor" ]; then
-    /usr/local/bin/composer update -n
+    /usr/local/bin/composer update --no-interaction --no-dev
   else
-    /usr/local/bin/composer install -n
+    /usr/local/bin/composer install --no-interaction --no-dev 
   fi
 else
   echo "NO composer.json found, not running composer!"
