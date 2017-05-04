@@ -1,0 +1,14 @@
+/.htaccess
+/.env
+/wp-config-old.php
+/wp/*
+/vendor/*
+/.idea/*
+/wp-content/mu-plugins/*
+/wp-content/backup*/*
+/wp-content/managewp/*
+/wp-content/*.log
+/wp-content/plugins/*
+/wp-content/uploads/*
+/gitscript.sh
+.DS_store

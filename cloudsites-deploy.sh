@@ -48,7 +48,7 @@ chmod -R u=rwX,g=rwX .
 cp "$ENV_FILE" .env
 
 # Excludes
-EXCLUDES=$(grep wp-content .gitignore | sed -e 's#^/#--exclude #' | tr '\n\r' ' ')
+EXCLUDES=$(grep wp-content .gitignore | grep -v 'wp-content/plugins' | sed -e 's#^/#--exclude #' | tr '\n\r' ' ')
 
 # Sync files to CloudSites
 set +x # Don't put password in logs
