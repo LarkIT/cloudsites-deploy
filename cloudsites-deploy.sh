@@ -65,7 +65,7 @@ EXCLUDES=$(grep wp-content .gitignore | grep -v 'wp-content/plugins' | sed -e 's
 
 # Sync files to SERVER
 if [[ -z $USE_RSYNC ]]; then
-#  set +x # Don't put password in logs
+  set +x # Don't put password in logs
   echo "Starting File Sync..."
   lftp -u "${CREDS}" sftp://${SERVER}/ -e "
     mirror --delete --reverse --parallel=10 --exclude .redirects --exclude .git --exclude .gitignore $EXCLUDES . $DEST;
