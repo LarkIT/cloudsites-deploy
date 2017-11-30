@@ -15,7 +15,7 @@
 # OPTIONAL ENVIRONMENT VARIABLES
 # - SERVER = the-envapp-01.domain.com - server to upload files to (default: ftp3.ftptoyoursite.com)
 # - DEST = path/to/deploy/to - overrides "determined" path (default: $DOMAIN/web/content)
-# - USE_RSYNC = if this variable is non-empty, we will use rsync instead of lftp 
+# - USE_RSYNC = if this variable is non-empty, we will use rsync instead of lftp
 ########################
 
 # DETERMINE DEPLOYMENT PATH (top level domains have www. prefixed in Cloud Sites)
@@ -40,7 +40,7 @@ if [ -f "composer.json" ]; then
   if [ -d "vendor" ]; then
     /usr/local/bin/composer update --no-interaction --no-dev
   else
-    /usr/local/bin/composer install --no-interaction --no-dev 
+    /usr/local/bin/composer install --no-interaction --no-dev
   fi
 else
   echo "NO composer.json found, not running composer!"
@@ -59,23 +59,24 @@ chmod -R u=rwX,g=rwX .
 
 # Get .env file
 cp "$ENV_FILE" .env
+chmod 0644 .env
 
 # Excludes
 EXCLUDES=$(grep wp-content .gitignore | grep -v 'wp-content/plugins' | sed -e 's#^/#--exclude #' | tr '\n\r' ' ')
+EXCLUDES+='--exclude .redirects --exclude .git --exclude .gitignore --exclude .svn'
 
 # Sync files to SERVER
 if [[ -z $USE_RSYNC ]]; then
-  set +x # Don't put password in logs
   echo "Starting File Sync..."
+  set +x # Dont put password in logs
   lftp -u "${CREDS}" sftp://${SERVER}/ -e "
-    mirror --delete --reverse --parallel=10 --exclude .redirects --exclude .git --exclude .gitignore $EXCLUDES . $DEST;
+    mirror --delete --reverse --parallel=10 $EXCLUDES . $DEST;
     chmod 600 ${DEST}/.env;
     put -O ${DEST} .env .htaccess;"
+  set -x
 else
-  rsync --archive --verbose --human-readable --stats --itemize-changes --exclude .redirects --exclude .git --exclude .gitignore $EXCLUDES ./ "${SERVER}:${DEST}/"
+  rsync --delete --archive --verbose --human-readable --stats --itemize-changes $EXCLUDES ./ "${SERVER}:${DEST}/"
 fi
 
 # Remove .env file
 rm -f .env
-
-
